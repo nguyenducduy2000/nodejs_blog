@@ -85,6 +85,24 @@ class CoursesController {
                 next(next);
             });
     }
+
+    //[POST] /courses/handle-form-actions
+    handleFormActions(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                Course.delete({ _id: { $in: req.body.courseIDs } })
+                    .lean()
+                    .then(() => {
+                        res.redirect('back');
+                    })
+                    .catch((next) => {
+                        next(next);
+                    });
+                break;
+            default:
+                res.json({ message: 'Action is invalid!' });
+        }
+    }
 }
 
 module.exports = new CoursesController();
